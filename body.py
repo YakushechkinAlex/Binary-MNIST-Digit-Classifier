@@ -36,7 +36,7 @@ model.fit(train_images, train_labels, epochs=5)
 
 # Evaluate the model
 test_loss, test_acc = model.evaluate(test_images, test_labels)
-print('Точность на тестовой выборке:', test_acc)
+print('accuracy:', test_acc)
 
 # Save the model in Keras format
 
