@@ -6,21 +6,21 @@ from tensorflow.keras.utils import to_categorical
 import ssl
 import certifi
 
-# Настройка контекста SSL для загрузки данных
+# SSL context setup for data downloading
 ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
 
-# Загрузка и фильтрация данных MNIST
+# Load and filter MNIST data
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 filter_train = (train_labels == 0) | (train_labels == 1)
 filter_test = (test_labels == 0) | (test_labels == 1)
 train_images, train_labels = train_images[filter_train], train_labels[filter_train]
 test_images, test_labels = test_images[filter_test], test_labels[filter_test]
 
-# Нормализация данных
+# Data normalization
 train_images = train_images / 255.0
 test_images = test_images / 255.0
 
-# Построение модели
+# Build the model
 model = Sequential([
     Input(shape=(28, 28)),
     Flatten(),
@@ -28,25 +28,22 @@ model = Sequential([
     Dense(2, activation='softmax')
 ])
 
-# Компиляция модели
+# Compile the model
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-# Обучение модели
+# Train the model
 model.fit(train_images, train_labels, epochs=5)
 
-# Оценка модели
+# Evaluate the model
 test_loss, test_acc = model.evaluate(test_images, test_labels)
 print('Точность на тестовой выборке:', test_acc)
 
-# Сохранение модели в формате Keras
+# Save the model in Keras format
+
 model.save('digit_classifier_model.keras')
 
-# Функция для предсказания на основе загруженного изображения
+# Function for predicting based on a loaded image
 def predict_digit(image):
     prediction = model.predict(image.reshape(1, 28, 28))
     return np.argmax(prediction)
 
-# Пример использования функции predict_digit можно добавить здесь, если есть конкретное изображение
-# image - это numpy массив изображения цифры
-# result = predict_digit(image)
-# print(result)
